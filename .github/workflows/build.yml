@@ -1,0 +1,87 @@
+name: Build MSYS2
+
+on:
+  push:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+
+    env:
+      MSYS2_URL: https://github.com/msys2/msys2-installer/releases/download/2023-10-26/msys2-base-x86_64-20231026.tar.xz
+      WINE_DOCKER_IMAGE: debuglevel/wine.msys2:latest
+      BORGMATIC_VERSION: borgbackup==1.2.7
+      BORG_VERSION: borgmatic @ git+https://github.com/debuglevel/borgmatic@edd2cceceeeb3984a9d39f41e7cfc6fb6495a21f
+
+    steps:
+      # - name: Check out repository
+      #   uses: actions/checkout@v3
+
+      - name: Extract MSYS2
+        run: |
+          echo \# wget --quiet -O wine.tar.xz $MSYS2_URL
+          wget --quiet -O wine.tar.xz $MSYS2_URL
+          #
+          echo \# ls -al .
+          ls -al .
+          #
+          echo \# tar --extract --file wine.tar.xz
+          tar --extract --file wine.tar.xz
+
+      - name: Test MSYS2 with WINE
+        run: |
+          shopt -s expand_aliases
+          alias docker_wine='docker run -e WINEDEBUG=-all -v $PWD/msys64:/mnt/ $WINE_DOCKER_IMAGE /opt/wine/bin/wine64'
+          #
+          echo \# docker_wine --version
+          docker_wine --version
+          #
+          echo \# docker_wine /mnt/usr/bin/bash.exe -l -c "pwd"
+          docker_wine /mnt/usr/bin/bash.exe -l -c "pwd"
+          #
+          echo \# docker_wine /mnt/usr/bin/bash.exe -l -c "pacman --version"
+          docker_wine /mnt/usr/bin/bash.exe -l -c "pacman --version"
+
+      - name: Install borg/borgmatic dependencies
+        run: |
+          shopt -s expand_aliases
+          alias docker_wine='docker run -e WINEDEBUG=-all -v $PWD/msys64:/mnt/ $WINE_DOCKER_IMAGE /opt/wine/bin/wine64'
+          #
+          docker_wine /mnt/usr/bin/bash.exe -l -c "pacman --sync --needed --noconfirm python python-pip"
+          docker_wine /mnt/usr/bin/bash.exe -l -c "pacman --sync --needed --noconfirm git base-devel gcc openssl-devel pkgconf"
+          docker_wine /mnt/usr/bin/bash.exe -l -c "pacman --sync --needed --noconfirm openssh ssh-pageant"
+          #
+          docker_wine /mnt/usr/bin/bash.exe -l -c "which python"
+          docker_wine /mnt/usr/bin/bash.exe -l -c "which python3"
+          docker_wine /mnt/usr/bin/bash.exe -l -c "python --version"
+          docker_wine /mnt/usr/bin/bash.exe -l -c "python3 --version"
+          docker_wine /mnt/usr/bin/bash.exe -l -c "which pip"
+          docker_wine /mnt/usr/bin/bash.exe -l -c "which pip3"
+          #
+          docker_wine /mnt/usr/bin/bash.exe -l -c "python -m pip install --upgrade pip setuptools wheel"
+
+      - name: Install borgmatic
+        run: |
+          shopt -s expand_aliases
+          alias docker_wine='docker run -e WINEDEBUG=-all -v $PWD/msys64:/mnt/ $WINE_DOCKER_IMAGE /opt/wine/bin/wine64'
+          #
+          docker_wine /mnt/usr/bin/bash.exe -l -c "SETUPTOOLS_USE_DISTUTILS=stdlib pip install '$BORGMATIC_VERSION'"
+          docker_wine /mnt/usr/bin/bash.exe -l -c "borgmatic --version"
+
+      - name: Install borg
+        run: |
+          shopt -s expand_aliases
+          alias docker_wine='docker run -e WINEDEBUG=-all -v $PWD/msys64:/mnt/ $WINE_DOCKER_IMAGE /opt/wine/bin/wine64'
+          #
+          docker_wine /mnt/usr/bin/bash.exe -l -c "pip install $BORG_VERSION"
+          docker_wine /mnt/usr/bin/bash.exe -l -c "borg --version"          
+
+      - name: Compress (zstd,5) and upload (to keep.sh)
+        run: |
+          export ZSTD_CLEVEL=5
+          export ZSTD_NBTHREADS=4
+          tar --create --zstd --file borgmatic-msys2.tar.zstd msys64
+          ls -alh borgmatic-msys2.tar.zstd
+          curl --upload-file borgmatic-msys2.tar.zstd https://free.keep.sh
