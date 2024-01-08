@@ -21,14 +21,14 @@ jobs:
 
       - name: Extract MSYS2
         run: |
-          echo \# wget --quiet -O wine.tar.xz $MSYS2_URL
-          wget --quiet -O wine.tar.xz $MSYS2_URL
+          echo \# wget --quiet -O msys2.tar.xz $MSYS2_URL
+          wget --quiet -O msys2.tar.xz $MSYS2_URL
           #
           echo \# ls -al .
           ls -al .
           #
-          echo \# tar --extract --file wine.tar.xz
-          tar --extract --file wine.tar.xz
+          echo \# tar --extract --file msys2.tar.xz
+          tar --extract --file msys2.tar.xz
 
       - name: Test MSYS2 with WINE
         run: |
