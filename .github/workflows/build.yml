@@ -16,8 +16,8 @@ jobs:
       BORG_VERSION: borgbackup==1.2.7
 
     steps:
-      # - name: Check out repository
-      #   uses: actions/checkout@v3
+      - name: Check out repository
+        uses: actions/checkout@v3
 
       - name: Extract MSYS2
         run: |
@@ -77,6 +77,14 @@ jobs:
           #
           docker_wine "pip install $BORG_VERSION"
           docker_wine "borg --version"          
+
+      - name: Test borgmatic
+        run: |
+          shopt -s expand_aliases
+          alias docker_wine='docker run -e WINEDEBUG=-all -v $PWD/msys64:/mnt/ $WINE_DOCKER_IMAGE /opt/wine/bin/wine64 /mnt/usr/bin/bash.exe -l -c'
+          #
+          cp test.sh $PWD/msys64/
+          docker_wine "bash test.sh"
 
       - name: Compress (zstd,5) and upload (to keep.sh)
         run: |
