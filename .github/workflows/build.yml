@@ -33,50 +33,50 @@ jobs:
       - name: Test MSYS2 with WINE
         run: |
           shopt -s expand_aliases
-          alias docker_wine='docker run -e WINEDEBUG=-all -v $PWD/msys64:/mnt/ $WINE_DOCKER_IMAGE /opt/wine/bin/wine64'
+          alias docker_wine='docker run -e WINEDEBUG=-all -v $PWD/msys64:/mnt/ $WINE_DOCKER_IMAGE /opt/wine/bin/wine64 /mnt/usr/bin/bash.exe -l -c'
           #
           echo \# docker_wine --version
           docker_wine --version
           #
-          echo \# docker_wine /mnt/usr/bin/bash.exe -l -c "pwd"
-          docker_wine /mnt/usr/bin/bash.exe -l -c "pwd"
+          echo \# docker_wine "pwd"
+          docker_wine "pwd"
           #
-          echo \# docker_wine /mnt/usr/bin/bash.exe -l -c "pacman --version"
-          docker_wine /mnt/usr/bin/bash.exe -l -c "pacman --version"
+          echo \# docker_wine "pacman --version"
+          docker_wine "pacman --version"
 
       - name: Install borg/borgmatic dependencies
         run: |
           shopt -s expand_aliases
-          alias docker_wine='docker run -e WINEDEBUG=-all -v $PWD/msys64:/mnt/ $WINE_DOCKER_IMAGE /opt/wine/bin/wine64'
+          alias docker_wine='docker run -e WINEDEBUG=-all -v $PWD/msys64:/mnt/ $WINE_DOCKER_IMAGE /opt/wine/bin/wine64 /mnt/usr/bin/bash.exe -l -c'
           #
-          docker_wine /mnt/usr/bin/bash.exe -l -c "pacman --sync --needed --noconfirm python python-pip"
-          docker_wine /mnt/usr/bin/bash.exe -l -c "pacman --sync --needed --noconfirm git base-devel gcc openssl-devel pkgconf"
-          docker_wine /mnt/usr/bin/bash.exe -l -c "pacman --sync --needed --noconfirm openssh ssh-pageant"
+          docker_wine "pacman --sync --needed --noconfirm python python-pip"
+          docker_wine "pacman --sync --needed --noconfirm git base-devel gcc openssl-devel pkgconf"
+          docker_wine "pacman --sync --needed --noconfirm openssh ssh-pageant"
           #
-          docker_wine /mnt/usr/bin/bash.exe -l -c "which python"
-          docker_wine /mnt/usr/bin/bash.exe -l -c "which python3"
-          docker_wine /mnt/usr/bin/bash.exe -l -c "python --version"
-          docker_wine /mnt/usr/bin/bash.exe -l -c "python3 --version"
-          docker_wine /mnt/usr/bin/bash.exe -l -c "which pip"
-          docker_wine /mnt/usr/bin/bash.exe -l -c "which pip3"
+          docker_wine "which python"
+          docker_wine "which python3"
+          docker_wine "python --version"
+          docker_wine "python3 --version"
+          docker_wine "which pip"
+          docker_wine "which pip3"
           #
-          docker_wine /mnt/usr/bin/bash.exe -l -c "python -m pip install --upgrade pip setuptools wheel"
+          docker_wine "python -m pip install --upgrade pip setuptools wheel"
 
       - name: Install borgmatic
         run: |
           shopt -s expand_aliases
-          alias docker_wine='docker run -e WINEDEBUG=-all -v $PWD/msys64:/mnt/ $WINE_DOCKER_IMAGE /opt/wine/bin/wine64'
+          alias docker_wine='docker run -e WINEDEBUG=-all -v $PWD/msys64:/mnt/ $WINE_DOCKER_IMAGE /opt/wine/bin/wine64 /mnt/usr/bin/bash.exe -l -c'
           #
-          docker_wine /mnt/usr/bin/bash.exe -l -c "SETUPTOOLS_USE_DISTUTILS=stdlib pip install '$BORGMATIC_VERSION'"
-          docker_wine /mnt/usr/bin/bash.exe -l -c "borgmatic --version"
+          docker_wine "SETUPTOOLS_USE_DISTUTILS=stdlib pip install '$BORGMATIC_VERSION'"
+          docker_wine "borgmatic --version"
 
       - name: Install borg
         run: |
           shopt -s expand_aliases
-          alias docker_wine='docker run -e WINEDEBUG=-all -v $PWD/msys64:/mnt/ $WINE_DOCKER_IMAGE /opt/wine/bin/wine64'
+          alias docker_wine='docker run -e WINEDEBUG=-all -v $PWD/msys64:/mnt/ $WINE_DOCKER_IMAGE /opt/wine/bin/wine64 /mnt/usr/bin/bash.exe -l -c'
           #
-          docker_wine /mnt/usr/bin/bash.exe -l -c "pip install $BORG_VERSION"
-          docker_wine /mnt/usr/bin/bash.exe -l -c "borg --version"          
+          docker_wine "pip install $BORG_VERSION"
+          docker_wine "borg --version"          
 
       - name: Compress (zstd,5) and upload (to keep.sh)
         run: |
