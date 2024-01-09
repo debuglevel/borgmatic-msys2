@@ -35,8 +35,8 @@ jobs:
           shopt -s expand_aliases
           alias docker_wine='docker run -e WINEDEBUG=-all -v $PWD/msys64:/mnt/ $WINE_DOCKER_IMAGE /opt/wine/bin/wine64 /mnt/usr/bin/bash.exe -l -c'
           #
-          echo \# docker_wine --version
-          docker_wine --version
+          echo \# docker run -e WINEDEBUG=-all -v $PWD/msys64:/mnt/ $WINE_DOCKER_IMAGE /opt/wine/bin/wine64 --version
+          docker run -e WINEDEBUG=-all -v $PWD/msys64:/mnt/ $WINE_DOCKER_IMAGE /opt/wine/bin/wine64 --version
           #
           echo \# docker_wine "pwd"
           docker_wine "pwd"
