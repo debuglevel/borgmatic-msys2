@@ -84,7 +84,7 @@ jobs:
           alias docker_wine='docker run -e WINEDEBUG=-all -v $PWD/msys64:/mnt/ $WINE_DOCKER_IMAGE /opt/wine/bin/wine64 /mnt/usr/bin/bash.exe -l -c'
           #
           cp test.sh $PWD/msys64/
-          docker_wine "bash test.sh"
+          docker_wine "bash /test.sh"
 
       - name: Compress (zstd,5) and upload (to keep.sh)
         run: |
