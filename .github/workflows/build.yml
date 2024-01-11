@@ -90,6 +90,7 @@ jobs:
         run: |
           export ZSTD_CLEVEL=5
           export ZSTD_NBTHREADS=4
-          tar --create --zstd --file borgmatic-msys2.tar.zstd msys64
-          ls -alh borgmatic-msys2.tar.zstd
-          curl --upload-file borgmatic-msys2.tar.zstd https://free.keep.sh
+          export FILENAME=$(date +%Y-%m-%dT%H-%M-%S).tar.zstd
+          tar --create --zstd --file $FILENAME msys64
+          ls -alh $FILENAME
+          curl --upload-file $FILENAME https://free.keep.sh
