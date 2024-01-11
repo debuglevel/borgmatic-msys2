@@ -88,9 +88,12 @@ jobs:
 
       - name: Compress (zstd,5) and upload (to keep.sh)
         run: |
-          export ZSTD_CLEVEL=5
+          export ZSTD_CLEVEL=10
           export ZSTD_NBTHREADS=4
-          export FILENAME=$(date +%Y-%m-%dT%H-%M-%S).tar.zstd
+          export FILENAME=borgmatic-msys2_$(date +%Y-%m-%dT%H-%M-%S).tar.zstd
           tar --create --zstd --file $FILENAME msys64
           ls -alh $FILENAME
-          curl --upload-file $FILENAME https://free.keep.sh
+          curl --fail-with-body --upload-file $FILENAME https://free.keep.sh
+          RC=$?
+          echo RC: $RC
+          exit $RC
