@@ -86,9 +86,9 @@ jobs:
           cp test.sh $PWD/msys64/
           docker_wine "bash /test.sh"
 
-      - name: Compress (zstd,10) and upload (to keep.sh)
+      - name: Compress (zstd,19) and upload (to keep.sh)
         run: |
-          export ZSTD_CLEVEL=10
+          export ZSTD_CLEVEL=19
           export ZSTD_NBTHREADS=4
           export FILENAME=borgmatic-msys2_$(date +%Y-%m-%dT%H-%M-%S).tar.zstd
           tar --create --zstd --file $FILENAME msys64
