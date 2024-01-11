@@ -86,7 +86,7 @@ jobs:
           cp test.sh $PWD/msys64/
           docker_wine "bash /test.sh"
 
-      - name: Compress (zstd,5) and upload (to keep.sh)
+      - name: Compress (zstd,10) and upload (to keep.sh)
         run: |
           export ZSTD_CLEVEL=10
           export ZSTD_NBTHREADS=4
