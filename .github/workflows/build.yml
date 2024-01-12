@@ -86,14 +86,28 @@ jobs:
           cp test.sh $PWD/msys64/
           docker_wine "bash /test.sh"
 
-      - name: Compress (zstd,19) and upload (to keep.sh)
+      - name: Compress (zstd,19)
         run: |
           export ZSTD_CLEVEL=19
           export ZSTD_NBTHREADS=4
           export FILENAME=borgmatic-msys2_$(date +%Y-%m-%dT%H-%M-%S).tar.zstd
           tar --create --zstd --file $FILENAME msys64
           ls -alh $FILENAME
-          curl --fail-with-body --upload-file $FILENAME https://free.keep.sh
-          RC=$?
-          echo RC: $RC
-          exit $RC
+          #curl --fail-with-body --upload-file $FILENAME https://free.keep.sh
+          #RC=$?
+          #echo RC: $RC
+          #exit $RC
+
+      # - name: Upload (to keep.sh)
+      #   run: |
+      #     curl --fail-with-body --upload-file borgmatic-msys2_*.tar.zstd https://free.keep.sh
+      #     RC=$?
+      #     echo RC: $RC
+      #     exit $RC
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: borgmatic-msys2.tar.zstd
+          path: borgmatic-msys2_*.tar.zstd
+          retention-days: 1
