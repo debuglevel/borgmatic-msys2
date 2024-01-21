@@ -41,6 +41,9 @@ jobs:
           echo \# docker_wine "pwd"
           docker_wine "pwd"
           #
+          echo \# docker_wine "whoami"
+          docker_wine "whoami"
+          #
           echo \# docker_wine "pacman --version"
           docker_wine "pacman --version"
 
