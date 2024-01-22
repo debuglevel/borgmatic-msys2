@@ -94,7 +94,7 @@ jobs:
           shopt -s expand_aliases
           alias docker_wine='docker run -e WINEDEBUG=-all -v $PWD/msys64:/mnt/ $WINE_DOCKER_IMAGE /opt/wine/bin/wine64 /mnt/usr/bin/bash.exe -l -c'
           #
-          docker_wine "pacman --sync --needed --noconfirm tmux nano mingw-w64-x86_64-jq"       
+          docker_wine "pacman --sync --needed --noconfirm tmux nano mingw-w64-ucrt-x86_64-jq"       
 
       - name: Compress (zstd,19)
         run: |
